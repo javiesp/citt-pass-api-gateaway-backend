@@ -4,5 +4,6 @@ export class CreateUserDto {
     phone: number;
     name: string;
     hashed_password: string
-    proyect_id_mongo: string;
+    run: string
+    proyect_id: number;
 }
