@@ -4,23 +4,41 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { query } from 'express';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     @Inject('USERS_SERVICES') private usersClient: ClientProxy,
+    @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
   ) {}
 
   @Post("/create-user")
   create(@Body() createUserDto: CreateUserDto) {
     console.log("pasa por aca")
-    return this.usersClient.send('createUser', createUserDto);
+    return this.usersClient.send('createUser', createUserDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
   @Get("/find-all-users")
-  findAll(@Query('proyect_id') proyect_id: string) { // recibe un parametro ingresado
-    return this.usersClient.send('findAllUsers', proyect_id); // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+  async findAll(@Query('project_id') project_id: string) { // recibe un parametro ingresado
+    console.log(this.projectClient)
+    const query = {
+      "project_id": project_id
+    }
+    // para utilizar dos funciones de dos microservicios distintos asincronicamente 
+    const usersData = await firstValueFrom( 
+      this.usersClient.send('findAllUsers', query)
+    ) 
+
+    const projectData = await firstValueFrom(
+      this.projectClient.send('findProjectById', query)
+    ) 
+
+    console.log('data project',projectData)
+    console.log('data users', usersData)
+    
+    return usersData
   }
 
   @Get('/find-one-user/:id')
@@ -30,6 +48,15 @@ export class UsersController {
 
   @Patch('/update-user/:id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const payload = {
+      "id": id,
+      "updateUserDto": updateUserDto
+    }
+    return this.usersClient.send("updateUser", payload)
+  }
+
+  @Patch('/update-user-password/:id')
+  updateUserPassword(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const payload = {
       "id": id,
       "updateUserDto": updateUserDto

@@ -16,6 +16,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           port: parseInt(process.env.USERS_SERVICES_PORT), // el puerto de la carpeta .env (ej: 3000)
         },
       },
+      {
+        name: 'PROJECT_SERVICES', 
+        transport: Transport.TCP,
+        options: {
+          host: process.env.PROJECT_SERVICES, // el host de la carpeta .env (localhost)
+          port: parseInt(process.env.PROJECT_SERVICES_PORT), // el puerto de la carpeta .env (ej: 3000)
+        },
+      },
     ]),
   ],
   controllers: [UsersController],

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -20,6 +20,12 @@ export class ProjectController {
   findAllProjects() {
     const rol = 'buscando rol'
     return this.projectClient.send('findAllProjects', rol);
+  }
+  
+  @Get('/get-project-by-id')
+  findProjectById(@Query('project_id') project_id: any) {
+    console.log('id', project_id)
+    return this.projectClient.send('findProjectById', project_id);
   }
 
   @Get(':id')
