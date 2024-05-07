@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query, Put } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -28,19 +28,24 @@ export class ProjectController {
     return this.projectClient.send('findProjectById', project_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
+  @Get('/search-project-by-name')
+  searchProjectByName(@Query('project_name') project_name: any ) {
+    console.log(project_name)
+    return this.projectClient.send('searchProductByName',project_name)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
+  @Put('update-project/:id')
+  updateProject(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+    const updateQuery = {
+      "id": id,
+      "updateProjectDto": updateProjectDto
+    } 
+
+    return this.projectClient.send('updateProject', updateQuery)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('delete-project/:id')
+  removeProject(@Param('id') id: string) {
     return this.projectService.remove(+id);
   }
 }
-// commit 2

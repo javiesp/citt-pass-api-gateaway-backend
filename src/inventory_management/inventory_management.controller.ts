@@ -29,10 +29,10 @@ export class InventoryManagementController {
   }
 
   @Patch('/update-inventory/:id')
-  updateUser(@Param('id') id: string, @Body() updateInventoryManagemenDto: UpdateInventoryManagementDto) {
+  updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) {
     const payload = {
       "id": id,
-      "updateupdateInventoryManagemenDto": updateInventoryManagemenDto
+      "updateInventoryManagementDto": updateInventoryManagementDto
     }
     return this.inventoryManagementClient.send("updateInventory", payload)
   }
