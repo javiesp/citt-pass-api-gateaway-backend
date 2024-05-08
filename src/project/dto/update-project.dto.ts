@@ -8,4 +8,4 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
     wishlist_id: number
     project_team_id: number
 }
-         
+           
