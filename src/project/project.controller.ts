@@ -46,6 +46,7 @@ export class ProjectController {
 
   @Delete('delete-project/:id')
   removeProject(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+    console.log(id)
+    return this.projectClient.send('removeProject', id);
   }
 }
