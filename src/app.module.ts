@@ -7,9 +7,10 @@ import { InventoryManagementModule } from './inventory_management/inventory_mana
 import { UserRoleModule } from './user_role/user_role.module';
 import { ProjectTeamModule } from './project-team/project-team.module';
 import { CheckInModule } from './check-in/check-in.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
-  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule],
+  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule],
   controllers: [AppController],
   providers: [AppService],
 })
