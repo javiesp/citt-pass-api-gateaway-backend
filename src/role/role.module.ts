@@ -9,11 +9,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ConfigModule.forRoot(),
     ClientsModule.register([
       {
-        name: 'USER_ROLE_SERVICES', 
+        name: 'USERS_SERVICES', 
         transport: Transport.TCP,
         options: {
-          host: process.env.USER_ROLE_SERVICES, // el host de la carpeta .env (localhost)
-          port: parseInt(process.env.USER_ROLE_PORT), // el puerto de la carpeta .env (ej: 3000)
+          host: process.env.USERS_SERVICES, // el host de la carpeta .env (localhost)
+          port: parseInt(process.env.USERS_SERVICES_PORT), // el puerto de la carpeta .env (ej: 3000)
         },
       },
     ]),

@@ -7,7 +7,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService,
-  @Inject('USER_ROLE_SERVICES') private roleClient: ClientProxy,
+  @Inject('USERS_SERVICES') private roleClient: ClientProxy,
   ) {}
 
   @Post("/create-role")
