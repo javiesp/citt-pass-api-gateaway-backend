@@ -8,9 +8,10 @@ import { UserRoleModule } from './user_role/user_role.module';
 import { ProjectTeamModule } from './project-team/project-team.module';
 import { CheckInModule } from './check-in/check-in.module';
 import { RoleModule } from './role/role.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule],
+  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule],
   controllers: [AppController],
   providers: [AppService],
 })
