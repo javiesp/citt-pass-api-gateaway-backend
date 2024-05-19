@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query, Put } from '@nestjs/common';
 import { UserRoleService } from './user_role.service';
 import { CreateUserRoleDto } from './dto/create-user_role.dto';
 import { UpdateUserRoleDto } from './dto/update-user_role.dto';
@@ -7,7 +7,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Controller('user-role')
 export class UserRoleController {
   constructor(private readonly userRoleService: UserRoleService,
-    @Inject('USER_ROLE_SERVICES') private userRoleClient: ClientProxy,
+    @Inject('USERS_SERVICES') private userRoleClient: ClientProxy,
 
   ) {}
 
@@ -27,7 +27,7 @@ export class UserRoleController {
     return this.userRoleClient.send("findOneUserRole", id);
   }
 
-  @Patch('/update-user-role/:id')
+  @Put('/update-user-role/:id')
   updateUserRole(@Param('id') id: string, @Body() updateUserRoleDto: UpdateUserRoleDto) {
     const payload = {
       "id": id,

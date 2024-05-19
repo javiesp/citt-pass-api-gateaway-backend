@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UserRoleService } from './user_role.service';
-import { UserRoleController } from './user_role.controller';
+import { RoleService } from './role.service';
+import { RoleController } from './role.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
@@ -18,7 +18,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  controllers: [UserRoleController],
-  providers: [UserRoleService],
+  controllers: [RoleController],
+  providers: [RoleService],
 })
-export class UserRoleModule {}
+export class RoleModule {}

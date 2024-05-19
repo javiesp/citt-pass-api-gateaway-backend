@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query, Put } from '@nestjs/common';
 import { InventoryManagementService } from './inventory_management.service';
 import { CreateInventoryManagementDto } from './dto/create-inventory_management.dto';
 import { UpdateInventoryManagementDto } from './dto/update-inventory_management.dto';
@@ -28,7 +28,7 @@ export class InventoryManagementController {
     return this.inventoryManagementClient.send("findOneInventory", id);
   }
 
-  @Patch('/update-inventory/:id')
+  @Put('/update-inventory/:id')
   updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) {
     const payload = {
       "id": id,
