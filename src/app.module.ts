@@ -11,9 +11,10 @@ import { RoleModule } from './role/role.module';
 import { ProductModule } from './product/product.module';
 import { RackTypeModule } from './rack-type/rack-type.module';
 import { WishListModule } from './wish-list/wish-list.module';
+import { ItemModule } from './item/item.module';
 
 @Module({
-  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule],
+  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule],
   controllers: [AppController],
   providers: [AppService],
 })
