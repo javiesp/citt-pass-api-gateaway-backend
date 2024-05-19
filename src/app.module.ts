@@ -16,7 +16,7 @@ import { BillLogModule } from './bill_log/bill_log.module';
 import { DecreaseModule } from './decrease/decrease.module';
 
 @Module({
-  imports: [UsersModule, ProjectModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule],
+  imports: [UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule],
   controllers: [AppController],
   providers: [AppService],
 })
