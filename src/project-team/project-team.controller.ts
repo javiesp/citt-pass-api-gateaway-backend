@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Put } from '@nestjs/common';
 import { ProjectTeamService } from './project-team.service';
 import { CreateProjectTeamDto } from './dto/create-project-team.dto';
 import { UpdateProjectTeamDto } from './dto/update-project-team.dto';
@@ -8,31 +8,37 @@ import { ClientProxy } from '@nestjs/microservices';
 export class ProjectTeamController {
   constructor(
     private readonly projectTeamService: ProjectTeamService,
-    @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
+    @Inject('PROJECT_SERVICES') private projectTeamClient: ClientProxy,
   ) {}
 
-  @Post()
+  @Post("/create-project-team")
   createProjectTeam(@Body() createProjectTeamDto: CreateProjectTeamDto) {
-    return this.projectClient.send('createProjectTeam', createProjectTeamDto);
+    console.log("crea un projectTeam")
+    return this.projectTeamClient.send('createProjectTeam', createProjectTeamDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
-  @Get()
-  findAll() {
-    return this.projectTeamService.findAll();
+  @Get('/find-all-project-teams')
+  findAllProjectTeams() {
+    return this.projectTeamClient.send('findAllProjectTeams', {});
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectTeamService.findOne(+id);
+  @Get('/find-one-project-team/:id')
+  findOneProjectTeam(@Param('id') id: string) {
+    return this.projectTeamClient.send("findOneProjectTeam", id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectTeamDto: UpdateProjectTeamDto) {
-    return this.projectTeamService.update(+id, updateProjectTeamDto);
+  @Put('/update-project-team/:id')
+  updateProjectTeam(@Param('id') id: string, @Body() updateProjectTeamDto: UpdateProjectTeamDto) {
+    const payload = {
+      "id": id,
+      "updateProjectTeamDto": updateProjectTeamDto
+    }
+    return this.projectTeamClient.send("updateProjectTeam", payload)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectTeamService.remove(+id);
+
+  @Delete('/delete-project-team/:id')
+  removeProjectTeam(@Param('id') id: string) {
+    return this.projectTeamClient.send('removeProjectTeam', id)
   }
 }

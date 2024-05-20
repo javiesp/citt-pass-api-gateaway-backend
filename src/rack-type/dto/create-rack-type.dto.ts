@@ -1,5 +1,5 @@
 export class CreateRackTypeDto {
-    rack_id: string;
+    rack_id: number;
     rack_type: string;
     rack_name: string;
 }

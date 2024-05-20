@@ -5,5 +5,5 @@ export class UpdateInventoryManagementDto extends PartialType(CreateInventoryMan
     inventory_id: number;
     inventory_name: string;
     product_id: number[];
-    rack_id: string;
+    rack_id: number;
 }

@@ -28,6 +28,11 @@ export class InventoryManagementController {
     return this.inventoryManagementClient.send("findOneInventory", id);
   }
 
+  @Get('/find-inventory-by-rack-id') 
+  findOneInventorybyRackid(@Query('rack_id') rack_id: any) {
+    return this.inventoryManagementClient.send("findOneInventorybyRackid", rack_id);
+  }
+
   @Put('/update-inventory/:id')
   updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) {
     const payload = {
