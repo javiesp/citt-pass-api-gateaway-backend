@@ -9,7 +9,7 @@ export class InventoryManagementController {
 
   constructor(private readonly inventoryManagementService: InventoryManagementService,
     @Inject('INVENTORY_MANAGEMENT_SERVICES') private inventoryManagementClient: ClientProxy,
-
+    
   ) {}
 
   @Post("/create-inventory")
