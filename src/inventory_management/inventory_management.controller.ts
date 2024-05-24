@@ -27,7 +27,7 @@ export class InventoryManagementController {
   findOneUser(@Param('id') id: string) {
     return this.inventoryManagementClient.send("findOneInventory", id);
   }
-
+  
   @Get('/get-inventory-by-rack-id')
   getByRackId(@Query('rack_id') rack_id: any) {
     return this.inventoryManagementClient.send('getByRackId', rack_id)
