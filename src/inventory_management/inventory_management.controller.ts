@@ -28,6 +28,11 @@ export class InventoryManagementController {
     return this.inventoryManagementClient.send("findOneInventory", id);
   }
 
+  @Get('/get-inventory-by-rack-id')
+  getByRackId(@Query('rack_id') rack_id: any) {
+    return this.inventoryManagementClient.send('getByRackId', rack_id)
+  }
+
   @Put('/update-inventory/:id')
   updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) {
     const payload = {
@@ -36,7 +41,6 @@ export class InventoryManagementController {
     }
     return this.inventoryManagementClient.send("updateInventory", payload)
   }
-
 
   @Delete('/delete-inventory/:id')
   remove(@Param('id') id: string) {
