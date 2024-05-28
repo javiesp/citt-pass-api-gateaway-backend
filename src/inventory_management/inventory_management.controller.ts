@@ -9,7 +9,7 @@ export class InventoryManagementController {
 
   constructor(private readonly inventoryManagementService: InventoryManagementService,
     @Inject('INVENTORY_MANAGEMENT_SERVICES') private inventoryManagementClient: ClientProxy,
-
+    
   ) {}
 
   @Post("/create-inventory")
@@ -27,6 +27,11 @@ export class InventoryManagementController {
   findOneUser(@Param('id') id: string) {
     return this.inventoryManagementClient.send("findOneInventory", id);
   }
+  
+  @Get('/get-inventory-by-rack-id')
+  getByRackId(@Query('rack_id') rack_id: any) {
+    return this.inventoryManagementClient.send('getByRackId', rack_id)
+  }
 
   @Get('/find-inventory-by-rack-id') 
   findOneInventorybyRackid(@Query('rack_id') rack_id: any) {
@@ -41,7 +46,6 @@ export class InventoryManagementController {
     }
     return this.inventoryManagementClient.send("updateInventory", payload)
   }
-
 
   @Delete('/delete-inventory/:id')
   remove(@Param('id') id: string) {
