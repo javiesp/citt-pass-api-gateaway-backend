@@ -5,14 +5,28 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { query } from 'express';
 import { firstValueFrom } from 'rxjs';
+import { AuthService } from 'src/auth/auth.service';
+
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
+    private readonly authService: AuthService,
     @Inject('USERS_SERVICES') private usersClient: ClientProxy,
     @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
   ) {}
+
+  @Post('login')
+  async login(@Body() credentials: { username: string; password: string }) {
+    const user = await this.usersClient.send('validateUser', credentials).toPromise();
+
+    if (user) {
+      return this.authService.login(user);
+    } else {
+      return { message: 'Invalid credentials' };
+    }
+  }
 
   @Post("/create-user")
   create(@Body() createUserDto: CreateUserDto) {

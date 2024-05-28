@@ -14,9 +14,10 @@ import { WishListModule } from './wish-list/wish-list.module';
 import { ItemModule } from './item/item.module';
 import { BillLogModule } from './bill_log/bill_log.module';
 import { DecreaseModule } from './decrease/decrease.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule],
+  imports: [UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
