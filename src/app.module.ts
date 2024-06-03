@@ -15,10 +15,12 @@ import { ItemModule } from './item/item.module';
 import { BillLogModule } from './bill_log/bill_log.module';
 import { DecreaseModule } from './decrease/decrease.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './users/jwt.guard';
+
 
 @Module({
   imports: [UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthGuard],
 })
 export class AppModule {}
