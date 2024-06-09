@@ -2,39 +2,18 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, Unautho
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { LoginAuthDto } from 'src/users/dto/create-user.dto';
 import { ClientProxy} from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
-import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/users/jwt.guard';
 
 @Controller('project')
 export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
-    private readonly jwtService: JwtService,
+
     @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
 
   ) {}
 
-  @Post('/login') 
-  async loginUser(@Body() loginAuthDto: LoginAuthDto): Promise<{ accessToken: string; message: string }> {
-    const userData = await this.projectClient.send('loginUser', loginAuthDto); 
-    
-    if (!userData) {
-      throw new UnauthorizedException('Invalid credentials'); 
-    }
-
-    // Genera el token JWT
-    const accessToken = this.generateToken(userData); 
-
-    return { accessToken, message: 'token generado' };
-  }
-
-  private generateToken(user: any): string { 
-    const payload = { email: user.email, sub: user.id }; 
-    return this.jwtService.sign(payload);
-  }
 
   @UseGuards(AuthGuard) 
   @Post('/create-project')

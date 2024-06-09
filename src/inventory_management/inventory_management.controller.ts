@@ -2,10 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, Unautho
 import { InventoryManagementService } from './inventory_management.service';
 import { CreateInventoryManagementDto } from './dto/create-inventory_management.dto';
 import { UpdateInventoryManagementDto } from './dto/update-inventory_management.dto';
-import { LoginAuthDto } from 'src/users/dto/create-user.dto';
 import { ClientProxy} from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
-import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/users/jwt.guard';
 
 
@@ -14,29 +11,10 @@ export class InventoryManagementController {
 
   constructor(
     private readonly inventoryManagementService: InventoryManagementService,
-    private readonly jwtService: JwtService,
     @Inject('INVENTORY_MANAGEMENT_SERVICES') private inventoryManagementClient: ClientProxy,
     
   ) {}
 
-  @Post('/login') 
-  async loginUser(@Body() loginAuthDto: LoginAuthDto): Promise<{ accessToken: string; message: string }> {
-    const userData = await this.inventoryManagementClient.send('loginUser', loginAuthDto); 
-    
-    if (!userData) {
-      throw new UnauthorizedException('Invalid credentials'); 
-    }
-
-    // Genera el token JWT
-    const accessToken = this.generateToken(userData); 
-
-    return { accessToken, message: 'token generado' };
-  }
-
-  private generateToken(user: any): string { 
-    const payload = { email: user.email, sub: user.id }; 
-    return this.jwtService.sign(payload);
-  }
 
   @UseGuards(AuthGuard) 
   @Post("/create-inventory")

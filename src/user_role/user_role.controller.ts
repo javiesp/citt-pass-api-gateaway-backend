@@ -2,39 +2,16 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, Unautho
 import { UserRoleService } from './user_role.service';
 import { CreateUserRoleDto} from './dto/create-user_role.dto';
 import { UpdateUserRoleDto } from './dto/update-user_role.dto';
-import { LoginAuthDto } from 'src/users/dto/create-user.dto';
 import { ClientProxy} from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
-import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/users/jwt.guard';
 
 @Controller('user-role')
 export class UserRoleController {
   constructor(
     private readonly userRoleService: UserRoleService,
-    private readonly jwtService: JwtService,
     @Inject('USERS_SERVICES') private userRoleClient: ClientProxy,
 
   ) {}
-
-  @Post('/login') 
-  async loginUser(@Body() loginAuthDto: LoginAuthDto): Promise<{ accessToken: string; message: string }> {
-    const userData = await this.userRoleClient.send('loginUser', loginAuthDto); 
-    
-    if (!userData) {
-      throw new UnauthorizedException('Invalid credentials'); 
-    }
-
-    // Genera el token JWT
-    const accessToken = this.generateToken(userData); 
-
-    return { accessToken, message: 'token generado' };
-  }
-
-  private generateToken(user: any): string { 
-    const payload = { email: user.email, sub: user.id }; 
-    return this.jwtService.sign(payload);
-  }
 
   @UseGuards(AuthGuard) 
   @Post("/create-user-role")

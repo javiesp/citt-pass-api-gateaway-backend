@@ -2,38 +2,16 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, Unautho
 import { BillLogService } from './bill_log.service';
 import { CreateBillLogDto } from './dto/create-bill_log.dto';
 import { UpdateBillLogDto } from './dto/update-bill_log.dto';
-import { LoginAuthDto } from 'src/users/dto/create-user.dto';
 import { ClientProxy} from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
-import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/users/jwt.guard';
 
 @Controller('bill-log')
 export class BillLogController {
   constructor(
     private readonly billLogService: BillLogService,
-    private readonly jwtService: JwtService,
     @Inject('BILL_LOG_SERVICES') private billLogClient: ClientProxy
   ) {}
 
-  @Post('/login') 
-  async loginUser(@Body() loginAuthDto: LoginAuthDto): Promise<{ accessToken: string; message: string }> {
-    const userData = await this.billLogClient.send('loginUser', loginAuthDto); 
-    
-    if (!userData) {
-      throw new UnauthorizedException('Invalid credentials'); 
-    }
-
-    // Genera el token JWT
-    const accessToken = this.generateToken(userData); 
-
-    return { accessToken, message: 'token generado' };
-  }
-
-  private generateToken(user: any): string { 
-    const payload = { email: user.email, sub: user.id }; 
-    return this.jwtService.sign(payload);
-  }
 
   @UseGuards(AuthGuard) 
   @Post("/create-bill-log")
