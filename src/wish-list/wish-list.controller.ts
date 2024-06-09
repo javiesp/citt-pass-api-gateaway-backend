@@ -12,7 +12,7 @@ export class WishListController {
 
   @Post("/create-wish-list")
   createWishList(@Body() createWishListDto: CreateWishListDto) {
-    console.log("crea un product")
+    console.log(createWishListDto)
     return this.wishListClient.send('createWishList', createWishListDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
