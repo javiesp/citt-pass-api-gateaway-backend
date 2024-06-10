@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query, UseGuards } from '@nestjs/common';
 import { CheckInService } from './check-in.service';
 import { CreateCheckInDto } from './dto/create-check-in.dto';
 import { UpdateCheckInDto } from './dto/update-check-in.dto';
 import { ClientProxy } from '@nestjs/microservices';
+import { AuthGuard } from '../users/jwt.guard';
 
 @Controller('check-in')
 export class CheckInController {
@@ -12,17 +13,20 @@ export class CheckInController {
   ) {}
 
   @Post('/create-check-in')
+  @UseGuards(AuthGuard) 
   createCheckIn(@Body() createCheckInDto: CreateCheckInDto) {
     console.log(this.checkInClient)
     return this.checkInClient.send('createCheckIn',createCheckInDto);
   }
 
+  @UseGuards(AuthGuard) 
   @Get('/find-all-check-in')
   findAllByDate() {
     return this.checkInClient.send('findAllByDate', 0);
   }
 
   @Get('/find-by-date-range')
+  @UseGuards(AuthGuard) 
   findAllByDateRange(
     @Query('startDate') startDateStr: string,
     @Query('endDate') endDateStr: string
