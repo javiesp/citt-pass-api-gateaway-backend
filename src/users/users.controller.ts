@@ -42,8 +42,8 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
-  @Get("/find-all-users")
-  async findAll(@Query('project_id') project_id: string) { // recibe un parametro ingresado
+  @Get("/find-users-by-project")
+  async findAllByProjectId(@Query('project_id') project_id: string) { // recibe un parametro ingresado
     const query = {
       "project_id": project_id
     }
@@ -54,6 +54,15 @@ export class UsersController {
 
     const projectData = await firstValueFrom(
       this.projectClient.send('findProjectById', query)
+    ) 
+    return usersData
+  }
+
+  @UseGuards(AuthGuard)
+  @Get("/find-all-users")
+  async findAll() { // recibe un parametro ingresado
+    const usersData = await firstValueFrom( 
+      this.usersClient.send('findAll', 1)
     ) 
     return usersData
   }
