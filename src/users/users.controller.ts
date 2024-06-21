@@ -64,7 +64,7 @@ export class UsersController {
     const usersData = await firstValueFrom( 
       this.usersClient.send('findAll', 1)
     ) 
-    return usersData
+    return usersData  
   }
 
   @UseGuards(AuthGuard)
