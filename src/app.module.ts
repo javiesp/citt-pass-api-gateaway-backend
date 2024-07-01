@@ -16,10 +16,18 @@ import { BillLogModule } from './bill_log/bill_log.module';
 import { DecreaseModule } from './decrease/decrease.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './users/jwt.guard';
-
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule, AuthModule],
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: 'mongodb+srv://javiesp:Ja22041982@cittpassbd.e658pj0.mongodb.net/',
+        retryWrites: true,
+        w: 'majority',
+      }),
+    }),
+    UsersModule, ProjectModule,ProjectTeamModule, InventoryManagementModule, UserRoleModule, CheckInModule, RoleModule, ProductModule, RackTypeModule, WishListModule, ItemModule, BillLogModule, DecreaseModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, AuthGuard],
 })
