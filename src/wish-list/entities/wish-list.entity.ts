@@ -27,12 +27,17 @@ export const WishListSchema = SchemaFactory.createForClass(WishList);
 
 @Schema()
 export class Product {
-
     @Prop()
     product_id: number;
-
+  
     @Prop()
-    cant: number;
+    product_name: string;
+  
+    @Prop()
+    price: number;
+  
+    @Prop()
+    quantity: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Query } from '@nestjs/common';
 import { WishListService } from './wish-list.service';
 import { CreateWishListDto } from './dto/create-wish-list.dto';
 import { UpdateWishListDto } from './dto/update-wish-list.dto';
 import { MessagePattern } from '@nestjs/microservices';
 import { AuthGuard } from 'src/users/jwt.guard';
-
+import { ProductDto } from './dto/product.dto';
 
 @Controller('wish-list')
 export class WishListController {
@@ -34,6 +34,14 @@ export class WishListController {
   update(@Param('id') id: string, @Body() updateWishListDto: UpdateWishListDto) { 
     console.log(updateWishListDto) 
     return this.wishListService.updateWishList(id, updateWishListDto);
+  }
+
+  @Put('/update-wishList-product/:id')
+  @UseGuards(AuthGuard)
+  async updateWishListProduct(@Param('id') wishlistId: string, @Body() updateProductDto: ProductDto) {
+    console.log('PRODUCT DTO')
+    console.log(updateProductDto)
+    return this.wishListService.updateWishListProduct(wishlistId, updateProductDto);
   }
 
   @Delete('/delete-wishList-type/:id')

@@ -4,6 +4,7 @@ import { UpdateWishListDto } from './dto/update-wish-list.dto';
 import { WishList } from './entities/wish-list.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class WishListService {
@@ -37,6 +38,25 @@ export class WishListService {
 
   async updateWishList(id: string, updateWishListDto: UpdateWishListDto): Promise<WishList> {
     return await this.wishListModel.findByIdAndUpdate(id, updateWishListDto, { new: true }).exec();
+  }
+
+  async updateWishListProduct(wishlistId: string, updateProductDto): Promise<WishList> {
+
+    console.log('DTO SERVICE')
+    console.log(updateProductDto)
+
+    const wishlist = await this.wishListModel.findById(wishlistId).exec();
+
+    wishlist.product.push({
+        product_id: updateProductDto.product_id,
+        product_name: updateProductDto.product_name,  
+        price: updateProductDto.price,
+        quantity: updateProductDto.quantity,
+      });
+    console.log('DATA')
+    console.log(wishlist)  
+    
+    return await wishlist.save();
   }
 
   async removeWishList(id: string): Promise<WishList> {
