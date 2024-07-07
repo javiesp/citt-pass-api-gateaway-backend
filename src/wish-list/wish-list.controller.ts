@@ -49,4 +49,4 @@ export class WishListController {
   remove(@Param('id') id: string) {
     return this.wishListService.removeWishList(id);
   }
-}
+} 
