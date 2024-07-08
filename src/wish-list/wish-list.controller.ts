@@ -33,14 +33,13 @@ export class WishListController {
   @UseGuards(AuthGuard) 
   update(@Param('id') id: string, @Body() updateWishListDto: UpdateWishListDto) { 
     console.log(updateWishListDto) 
+    console.log(updateWishListDto.budget) 
     return this.wishListService.updateWishList(id, updateWishListDto);
   }
 
   @Put('/update-wishList-product/:id')
   @UseGuards(AuthGuard)
   async updateWishListProduct(@Param('id') wishlistId: string, @Body() updateProductDto: ProductDto) {
-    console.log('PRODUCT DTO')
-    console.log(updateProductDto)
     return this.wishListService.updateWishListProduct(wishlistId, updateProductDto);
   }
 

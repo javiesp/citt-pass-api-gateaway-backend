@@ -37,13 +37,11 @@ export class WishListService {
   }
 
   async updateWishList(id: string, updateWishListDto: UpdateWishListDto): Promise<WishList> {
+    console.log(updateWishListDto)
     return await this.wishListModel.findByIdAndUpdate(id, updateWishListDto, { new: true }).exec();
   }
 
   async updateWishListProduct(wishlistId: string, updateProductDto): Promise<WishList> {
-
-    console.log('DTO SERVICE')
-    console.log(updateProductDto)
 
     const wishlist = await this.wishListModel.findById(wishlistId).exec();
 
@@ -53,8 +51,6 @@ export class WishListService {
         price: updateProductDto.price,
         quantity: updateProductDto.quantity,
       });
-    console.log('DATA')
-    console.log(wishlist)  
     
     return await wishlist.save();
   }
