@@ -32,7 +32,7 @@ export class WishListController {
   @Put('/update-wishList-type/:id')
   @UseGuards(AuthGuard) 
   update(@Param('id') id: string, @Body() updateWishListDto: UpdateWishListDto) { 
-    console.log(updateWishListDto) 
+    console.log("PASS") 
     console.log(updateWishListDto.budget) 
     return this.wishListService.updateWishList(id, updateWishListDto);
   }
@@ -40,6 +40,7 @@ export class WishListController {
   @Put('/update-wishList-product/:id')
   @UseGuards(AuthGuard)
   async updateWishListProduct(@Param('id') wishlistId: string, @Body() updateProductDto: ProductDto) {
+    console.log("NOPASS") 
     return this.wishListService.updateWishListProduct(wishlistId, updateProductDto);
   }
 
