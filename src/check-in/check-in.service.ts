@@ -24,6 +24,22 @@ export class CheckInService {
     return this.checkInModel.find().sort({ entry_date: -1 }).exec();
   }
 
+  async findAllByUidUser(uid_user: string): Promise<boolean> {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    const checkIns = await this.checkInModel.find({
+      uid_user,
+      entry_date: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
+    }).exec();
+
+    return checkIns.length > 0;
+  }
+
   async findAllByDateRange(startDate: string, endDate: string): Promise<CheckIn[]> {
     const startDateTime = new Date(startDate);
     const endDateTime = new Date(endDate);

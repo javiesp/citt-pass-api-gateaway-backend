@@ -22,6 +22,13 @@ export class CheckInController {
     return this.checkInService.findAllByDate();
   }
 
+  @Get('/find-all-by-uid-user')
+  async findAllByUIDUser(
+    @Query('uid_user') uid_user: string,
+  ): Promise<boolean> {
+    return this.checkInService.findAllByUidUser(uid_user);
+  }
+
   @Get('/find-by-date-range')
   async findAllByDateRange(
     @Query('startDate') startDateStr: string,
