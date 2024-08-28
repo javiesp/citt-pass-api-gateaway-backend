@@ -24,6 +24,22 @@ export class CheckInService {
     return this.checkInModel.find().sort({ entry_date: -1 }).exec();
   }
 
+  async findAllByDay(startDate: string, endDate: string): Promise<CheckIn[]> {
+
+    const data = this.checkInModel.find({ 
+      entry_date: { $gte: new Date(startDate), $lte: new Date(endDate) } 
+    }).exec(); 
+
+    return data;
+  }
+
+  async findAllByDayAndUser(startDate: string, endDate: string, uidUser: string): Promise<CheckIn[]> {
+    return this.checkInModel.find({ 
+      entry_date: { $gte: new Date(startDate), $lte: new Date(endDate) },
+      uid_user: uidUser 
+    }).exec();
+  }
+
   async findAllByUidUser(uid_user: string): Promise<boolean> {
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
@@ -57,15 +73,15 @@ export class CheckInService {
     return this.checkInModel.find({ entry_date: { $gte: lastWeekDate } }).exec();
   }
 
-  async findAllByDay(): Promise<CheckIn[]> {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    return this.checkInModel.find({
-      entry_date: { $gte: today, $lt: tomorrow }
-    }).exec();
-  }
+  // async findAllByDay(): Promise<CheckIn[]> {
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
+  //   const tomorrow = new Date(today);
+  //   tomorrow.setDate(today.getDate() + 1);
+  //   return this.checkInModel.find({
+  //     entry_date: { $gte: today, $lt: tomorrow }
+  //   }).exec();
+  // }
 
   findOne(id: number) {
     return `This action returns a #${id} checkIn`;

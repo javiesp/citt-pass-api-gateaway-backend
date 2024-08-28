@@ -53,6 +53,47 @@ export class CheckInController {
     // Llamar al servicio para encontrar check-ins dentro del rango de fechas
     return this.checkInService.findAllByDateRange(isoStartDate, isoEndDate);
   }
+
+  @Get('/find-by-day')
+  async findAllByDay(
+    @Query('date') dateStr: string
+  ): Promise<CheckIn[]> {
+    // Convertir la cadena de fecha a objeto Date
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const startDate = new Date(year, month - 1, day);
+    
+    // Establecer la hora de inicio y fin del día
+    const endDate = new Date(startDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    // Convertir a ISO strings para consulta
+    const isoStartDate = startDate.toISOString();
+    const isoEndDate = endDate.toISOString();
+
+    // Llamar al servicio para encontrar check-ins del día especificado
+    return this.checkInService.findAllByDay(isoStartDate, isoEndDate);
+  }
+
+  @Get('/find-by-day-and-user')
+  async findAllByDayAndUser(
+    @Query('date') dateStr: string,
+    @Query('uid_user') uidUser: string
+  ): Promise<CheckIn[]> {
+    // Convertir la cadena de fecha a objeto Date
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const startDate = new Date(year, month - 1, day);
+    
+    // Establecer la hora de inicio y fin del día
+    const endDate = new Date(startDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    // Convertir a ISO strings para consulta
+    const isoStartDate = startDate.toISOString();
+    const isoEndDate = endDate.toISOString();
+
+    // Llamar al servicio para encontrar check-ins del día especificado y del usuario
+    return this.checkInService.findAllByDayAndUser(isoStartDate, isoEndDate, uidUser);
+  }
   
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCheckInDto: UpdateCheckInDto) {
