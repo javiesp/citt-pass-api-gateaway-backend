@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateInventoryManagementDto } from './dto/create-inventory_management.dto';
 import { UpdateInventoryManagementDto } from './dto/update-inventory_management.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { InventoryManagement } from './entities/inventory_management.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class InventoryManagementService {
-  create(createInventoryManagementDto: CreateInventoryManagementDto) {
-    return 'This action adds a new inventoryManagement';
+  constructor(@InjectModel(InventoryManagement.name) private readonly inventoryManagementModel: Model<InventoryManagement>) {}
+
+  async createInventoryManagement(createInventoryManagementDto: CreateInventoryManagementDto): Promise<InventoryManagement> {
+    const createdInventoryManagement = new this.inventoryManagementModel(createInventoryManagementDto).save();
+    console.log(createInventoryManagementDto)
+    return createdInventoryManagement;
   }
 
-  findAll() {
-    return `This action returns all inventoryManagement`;
+  async findAllInventories() : Promise<InventoryManagement[]>{
+    return await this.inventoryManagementModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inventoryManagement`;
+  async findOneInventory(id: string): Promise<InventoryManagement> {
+    return await this.inventoryManagementModel.findById(id).exec();
   }
 
-  update(id: number, updateInventoryManagementDto: UpdateInventoryManagementDto) {
-    return `This action updates a #${id} inventoryManagement`;
+  async findInventoryByRackId(rack_id: string): Promise<InventoryManagement[]> {
+    return this.inventoryManagementModel.find({ rack_id }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inventoryManagement`;
+  async updateInventory(id: string, updateInventoryManagementDto: UpdateInventoryManagementDto): Promise<InventoryManagement> {
+    return await this.inventoryManagementModel.findByIdAndUpdate(id, updateInventoryManagementDto, { new: true }).exec();
+  }
+
+
+  async removeInventorty(id: string): Promise<InventoryManagement> {
+    return await this.inventoryManagementModel.findByIdAndDelete(id).exec();
   }
 }

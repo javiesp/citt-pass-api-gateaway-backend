@@ -1,23 +1,11 @@
 import { Module } from '@nestjs/common';
 import { RackTypeService } from './rack-type.service';
 import { RackTypeController } from './rack-type.controller';
-import { ConfigModule } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RackTypeSchema } from './entities/rack-type.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    ClientsModule.register([
-      {
-        name: 'RACK_TYPE_SERVICES', 
-        transport: Transport.TCP,
-        options: {
-          host: process.env.RACK_TYPE_SERVICES, // el host de la carpeta .env (localhost)
-          port: parseInt(process.env.RACK_TYPE_PORT), // el puerto de la carpeta .env (ej: 3000)
-        },
-      },
-    ]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: 'RackType', schema: RackTypeSchema }])],
   controllers: [RackTypeController],
   providers: [RackTypeService],
 })

@@ -1,65 +1,49 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Query } from '@nestjs/common';
 import { InventoryManagementService } from './inventory_management.service';
 import { CreateInventoryManagementDto } from './dto/create-inventory_management.dto';
 import { UpdateInventoryManagementDto } from './dto/update-inventory_management.dto';
-import { ClientProxy} from '@nestjs/microservices';
+import { MessagePattern } from '@nestjs/microservices';
 import { AuthGuard } from 'src/users/jwt.guard';
-
 
 @Controller('inventory-management')
 export class InventoryManagementController {
-
-  constructor(
-    private readonly inventoryManagementService: InventoryManagementService,
-    @Inject('INVENTORY_MANAGEMENT_SERVICES') private inventoryManagementClient: ClientProxy,
-    
-  ) {}
+  constructor(private readonly inventoryManagementService: InventoryManagementService) {}
 
 
+  @Post('create-inventory')
   @UseGuards(AuthGuard) 
-  @Post("/create-inventory")
   create(@Body() createInventoryManagementDto: CreateInventoryManagementDto) {
-    console.log("crea inventario")
-    return this.inventoryManagementClient.send('createinventory', createInventoryManagementDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+    return this.inventoryManagementService.createInventoryManagement(createInventoryManagementDto);
   }
 
-  @UseGuards(AuthGuard) 
   @Get('/find-all-inventories')
-  findAll() {
-    return this.inventoryManagementClient.send('findAllInventories', {});
-  }
-
   @UseGuards(AuthGuard) 
-  @Get('/find-one-inventory/:id')
-  findOneUser(@Param('id') id: string) {
-    return this.inventoryManagementClient.send("findOneInventory", id);
+  findAll() {
+    return this.inventoryManagementService.findAllInventories();
   }
   
+  @Get('/find-one-inventory/:id') 
   @UseGuards(AuthGuard) 
-  @Get('/get-inventory-by-rack-id')
-  getByRackId(@Query('rack_id') rack_id: any) {
-    return this.inventoryManagementClient.send('getByRackId', rack_id)
+  findOne(@Param('id') id: string) {
+    return this.inventoryManagementService.findOneInventory(id);
   }
 
-  @UseGuards(AuthGuard) 
   @Get('/find-inventory-by-rack-id') 
+  @UseGuards(AuthGuard) 
   findOneInventorybyRackid(@Query('rack_id') rack_id: any) {
-    return this.inventoryManagementClient.send("findOneInventorybyRackid", rack_id);
+    return this.inventoryManagementService.findInventoryByRackId(rack_id);
   }
 
-  @UseGuards(AuthGuard) 
   @Put('/update-inventory/:id')
-  updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) {
-    const payload = {
-      "id": id,
-      "updateInventoryManagementDto": updateInventoryManagementDto
-    }
-    return this.inventoryManagementClient.send("updateInventory", payload)
-  }
-
   @UseGuards(AuthGuard) 
+  updateInventory(@Param('id') id: string, @Body() updateInventoryManagementDto: UpdateInventoryManagementDto) { 
+    console.log(updateInventoryManagementDto) 
+    return this.inventoryManagementService.updateInventory(id, updateInventoryManagementDto);
+  }
+  
   @Delete('/delete-inventory/:id')
+  @UseGuards(AuthGuard) 
   remove(@Param('id') id: string) {
-    return this.inventoryManagementClient.send('removeInventory', id)
+    return this.inventoryManagementService.removeInventorty(id);
   }
 }
