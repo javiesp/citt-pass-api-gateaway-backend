@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UnauthorizedException, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, LoginAuthDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -61,14 +61,14 @@ export class UsersController {
     return this.usersService.findOneUser(id);
   }
 
-  @Patch('/update-user/:id')
+  @Put('/update-user/:id')
   @UseGuards(AuthGuard) 
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) { 
     console.log(updateUserDto) 
     return this.usersService.updateUser(id, updateUserDto);
   }
 
-  @Patch('/update-user-password/:id')
+  @Put('/update-user-password/:id')
   @UseGuards(AuthGuard) 
   updateUserPassword(@Param('id') id: string, @Body() updateUserDto: UpdateUserPasswordDto) { 
     console.log(updateUserDto) 
