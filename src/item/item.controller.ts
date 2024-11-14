@@ -18,19 +18,19 @@ export class ItemController {
   @Post("/create-item")
   createItem(@Body() createItemDto: CreateItemDto) {
     console.log("crea un product")
-    return this.itemClient.send('createItem', createItemDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+    return this.itemService.create(createItemDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-all-items')
   findAllItems() {
-    return this.itemClient.send('findAllItems', {});
+    return this.itemService.findAll();
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-one-item/:id')
   findOneItem(@Param('id') id: string) {
-    return this.itemClient.send("findOneItem", id);
+    return this.itemService.findOne(id);
   }
 
   @UseGuards(AuthGuard) 
@@ -40,12 +40,12 @@ export class ItemController {
       "id": id,
       "updateItemDto": updateItemDto
     }
-    return this.itemClient.send("updateItem", payload)
+    return this.itemService.update(id, updateItemDto)
   }
 
   @UseGuards(AuthGuard) 
   @Delete('/delete-item/:id')
   removeItem(@Param('id') id: string) {
-    return this.itemClient.send('removeItem', id)
+    return this.itemService.remove(id)
   }
 }
