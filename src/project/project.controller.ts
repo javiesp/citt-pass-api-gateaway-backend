@@ -1,62 +1,50 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Inject, Query, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { ClientProxy} from '@nestjs/microservices';
+import { MessagePattern } from '@nestjs/microservices';
 import { AuthGuard } from 'src/users/jwt.guard';
 
 @Controller('project')
 export class ProjectController {
-  constructor(
-    private readonly projectService: ProjectService,
+  constructor(private readonly projectService: ProjectService) {}
 
-    @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
-
-  ) {}
-
-
-  @UseGuards(AuthGuard) 
   @Post('/create-project')
-  createProject(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectClient.send('createProject',createProjectDto);
+  @UseGuards(AuthGuard) 
+  create(@Body() createProjectDto: CreateProjectDto) {
+    return this.projectService.createProject(createProjectDto);
   }
 
+  @Get('/get-project')
   @UseGuards(AuthGuard) 
-  @Get('/get-projects')
-  findAllProjects() {
-    const rol = 'buscando rol'
-    return this.projectClient.send('findAllProjects', rol);
+  findAllProject() {
+    return this.projectService.findAllProject();
   }
-  
-  @UseGuards(AuthGuard) 
+
   @Get('/get-project-by-id')
+  @UseGuards(AuthGuard) 
   findProjectById(@Query('project_id') project_id: any) {
-    console.log('id', project_id)
-    return this.projectClient.send('findProjectById', project_id);
+    console.log('hola ',project_id)
+    return this.projectService.findProjectById(project_id);
+  } 
+
+  @Get('/search-product-by-name')
+  @UseGuards(AuthGuard) 
+  searchProductByName(@Query('project_name') project_name: any) {
+    return this.projectService.searchProductByName(project_name);
   }
 
-  @UseGuards(AuthGuard) 
-  @Get('/search-project-by-name')
-  searchProjectByName(@Query('project_name') project_name: any ) {
-    console.log(project_name)
-    return this.projectClient.send('searchProductByName',project_name)
-  }
-
-  @UseGuards(AuthGuard) 
   @Put('update-project/:id')
-  updateProject(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    const updateQuery = {
-      "id": id,
-      "updateProjectDto": updateProjectDto
-    } 
-
-    return this.projectClient.send('updateProject', updateQuery)
+  @UseGuards(AuthGuard) 
+  updateProject(@Param('id') id: any, @Body() updateProjectDto: UpdateProjectDto) {
+    console.log(updateProjectDto)
+    return this.projectService.updateProject(id, updateProjectDto);
   }
 
-  @UseGuards(AuthGuard) 
   @Delete('delete-project/:id')
+  @UseGuards(AuthGuard) 
   removeProject(@Param('id') id: string) {
     console.log(id)
-    return this.projectClient.send('removeProject', id);
+    return this.projectService.removeProject(id);
   }
 }

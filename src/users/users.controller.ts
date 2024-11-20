@@ -1,100 +1,83 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, Query, UnauthorizedException, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UnauthorizedException, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, LoginAuthDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ClientProxy, MessagePattern } from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
-import { firstValueFrom } from 'rxjs';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { AuthGuard } from './jwt.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    @Inject('USERS_SERVICES') private usersClient: ClientProxy,
-    @Inject('PROJECT_SERVICES') private projectClient: ClientProxy,
   ) {}
 
-  @Post('/login') 
+  @Post('/login')
   async loginUser(@Body() loginAuthDto: LoginAuthDto): Promise<{ accessToken: string; message: string }> {
-    const userData = await this.usersClient.send('loginUser', loginAuthDto); 
-    
+    const userData = await this.usersService.userLogin(loginAuthDto);
+    console.log('HOLA MUNDO')
+    console.log(loginAuthDto)
     if (!userData) {
-      throw new UnauthorizedException('Invalid credentials'); 
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Genera el token JWT
-    const accessToken = this.generateToken(userData); 
+    const accessToken = this.generateToken(userData);
 
     return { accessToken, message: 'token generado' };
   }
 
-  private generateToken(user: any): string { 
-    const payload = { email: user.email, sub: user.id }; 
+  private generateToken(user: any): string {
+    console.log('HOLA MUNDO')
+    console.log(user)
+    const payload = { email: user.email, sub: user._id };
     return this.jwtService.sign(payload);
   }
 
+  @Post('/create-user')
   @UseGuards(AuthGuard) 
-  @Post("/create-user")
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersClient.send('createUser', createUserDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+  createUser(@Body() createUserDto: CreateUserDto) { 
+    console.log("pasa por aca")
+    return this.usersService.createUser(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Get("/find-users-by-project")
-  async findAllByProjectId(@Query('project_id') project_id: string) { // recibe un parametro ingresado
-    const query = {
-      "project_id": project_id
-    }
-    // para utilizar dos funciones de dos microservicios distintos asincronicamente 
-    const usersData = await firstValueFrom( 
-      this.usersClient.send('findAllUsers', query)
-    ) 
-
-    const projectData = await firstValueFrom(
-      this.projectClient.send('findProjectById', query)
-    ) 
-    return usersData
+  @Get('/find-users-by-project')
+  @UseGuards(AuthGuard) 
+  async findUsersByProject(@Query('proyect_id') proyectId: number) {
+    return this.usersService.findUsersByProject(proyectId);
   }
 
-  @UseGuards(AuthGuard)
-  @Get("/find-all-users")
-  async findAll() { // recibe un parametro ingresado
-    const usersData = await firstValueFrom( 
-      this.usersClient.send('findAll', 1)
-    ) 
-    return usersData  
+
+  @Get('/find-all-users')
+  @UseGuards(AuthGuard) 
+  findAll() { 
+    const usersData = this.usersService.findAll();
+    return usersData;
   }
 
-  @UseGuards(AuthGuard)
-  @Get('/find-one-user/:id')
-  findOneUser(@Param('id') id: string) {
-    return this.usersClient.send("findOneUser", id);
+  @Get('/find-one-user/:id') 
+  @UseGuards(AuthGuard) 
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOneUser(id);
   }
 
-  @UseGuards(AuthGuard)
-  @Patch('/update-user/:id')
-  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const payload = {
-      "id": id,
-      "updateUserDto": updateUserDto
-    }
-    return this.usersClient.send("updateUser", payload)
+  @Put('/update-user/:id')
+  @UseGuards(AuthGuard) 
+  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) { 
+    console.log(updateUserDto) 
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Patch('/update-user-password/:id')
-  updateUserPassword(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const payload = {
-      "id": id,
-      "updateUserDto": updateUserDto
-    }
-    return this.usersClient.send("updateUser", payload)
+  @Put('/update-user-password/:id')
+  @UseGuards(AuthGuard) 
+  updateUserPassword(@Param('id') id: string, @Body() updateUserDto: UpdateUserPasswordDto) { 
+    console.log(updateUserDto) 
+    return this.usersService.updateUserPassword(id, updateUserDto);
   }
 
   @Delete('/delete-user/:id')
+  @UseGuards(AuthGuard) 
   remove(@Param('id') id: string) {
-    return this.usersClient.send('removeUser', id)
+    return this.usersService.removeUser(id);
   }
 }

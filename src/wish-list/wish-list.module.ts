@@ -1,23 +1,13 @@
 import { Module } from '@nestjs/common';
 import { WishListService } from './wish-list.service';
 import { WishListController } from './wish-list.controller';
-import { ConfigModule } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProductSchema, WishListSchema } from './entities/wish-list.entity';
 
 @Module({
   imports: [
-  ConfigModule.forRoot(),
-    ClientsModule.register([
-      {
-        name: 'WISH_LIST_SERVICES', 
-        transport: Transport.TCP,
-        options: {
-          host: process.env.WISH_LIST_SERVICES, // el host de la carpeta .env (localhost)
-          port: parseInt(process.env.WISH_LIST_PORT), // el puerto de la carpeta .env (ej: 3000)
-        },
-      },
-    ]),
-  ],
+    MongooseModule.forFeature([{ name: 'WishList', schema: WishListSchema }]),
+    MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }])],
   controllers: [WishListController],
   providers: [WishListService],
 })
