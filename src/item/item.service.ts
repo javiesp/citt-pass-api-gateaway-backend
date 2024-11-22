@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Item } from './entities/item.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ItemService {
-  create(createItemDto: CreateItemDto) {
-    return 'This action adds a new item';
+  constructor(@InjectModel(Item.name) private readonly itemModel: Model<Item>) {}
+
+  async createItem(createItemDto: CreateItemDto): Promise<Item> {
+    const createdItem = new this.itemModel(createItemDto).save();
+    console.log(createItemDto)
+    return createdItem;
   }
 
-  findAll() {
-    return `This action returns all item`;
+  async findAllItems() : Promise<Item[]>{
+    return await this.itemModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOneItem(id: string): Promise<Item> {
+    return await this.itemModel.findById(id).exec();
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async updateItem(id: string, updateItemDto: UpdateItemDto): Promise<Item> {
+    return await this.itemModel.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async removeItem(id: string): Promise<Item> {
+    return await this.itemModel.findByIdAndDelete(id).exec();
   }
 }

@@ -3,9 +3,12 @@ import { ItemService } from './item.service';
 import { ItemController } from './item.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Item, ItemSchema } from './entities/item.entity';
 
 @Module({
   imports: [ 
+    MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
     ConfigModule.forRoot(),
     ClientsModule.register([
       {
