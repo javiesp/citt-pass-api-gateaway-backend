@@ -61,6 +61,12 @@ export class UsersController {
     return this.usersService.findOneUser(id);
   }
 
+  @Get('/find-one-user-by-mail/') 
+  @UseGuards(AuthGuard) 
+  findOneByMail(@Query('email') email: string) {
+    return this.usersService.findOneUserByMail(email);
+  }
+
   @Put('/update-user/:id')
   @UseGuards(AuthGuard) 
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) { 

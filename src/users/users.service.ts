@@ -48,6 +48,10 @@ export class UsersService {
     return await this.userModel.findById(id).exec();
   }
 
+  async findOneUserByMail(email: string): Promise<User> {
+    return await this.userModel.findOne({ email }).exec();
+  }  
+
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     return await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
   }
