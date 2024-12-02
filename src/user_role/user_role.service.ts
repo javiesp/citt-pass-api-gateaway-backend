@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserRoleDto } from './dto/create-user_role.dto';
 import { UpdateUserRoleDto } from './dto/update-user_role.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { UserRole } from './entities/user_role.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserRoleService {
-  create(createUserRoleDto: CreateUserRoleDto) {
-    return 'This action adds a new userRole';
+
+  constructor(@InjectModel(UserRole.name) private readonly userRoleModel: Model<UserRole>) {}
+
+
+  async createUserRole(createUserRoleDto: CreateUserRoleDto): Promise<UserRole> {
+    const createdUserRole = new this.userRoleModel(createUserRoleDto).save();
+    console.log(createUserRoleDto)
+    return createdUserRole;
   }
 
-  findAll() {
-    return `This action returns all userRole`;
+  async findAllUserRoles() : Promise<UserRole[]>{
+    return await this.userRoleModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userRole`;
+  async findOneUserRole(id: string): Promise<UserRole> {
+    return await this.userRoleModel.findById(id).exec();
   }
 
-  update(id: number, updateUserRoleDto: UpdateUserRoleDto) {
-    return `This action updates a #${id} userRole`;
+  async findOneUserRoleByUID(uid_user: string): Promise<UserRole> {
+    return await this.userRoleModel.findOne({ uid_user }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userRole`;
+  async updateUserRole(id: string, updateUserRoleDto: UpdateUserRoleDto): Promise<UserRole> {
+    return await this.userRoleModel.findByIdAndUpdate(id, updateUserRoleDto, { new: true }).exec();
   }
+
+
+  async removeUserRole(id: string): Promise<UserRole> {
+    return await this.userRoleModel.findByIdAndDelete(id).exec();
+  }
+
+
 }

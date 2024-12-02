@@ -8,4 +8,3 @@ export class CreateUserRoleDto {
     major_school: string;
     current_semester: number;
 }
-

@@ -3,9 +3,12 @@ import { UserRoleService } from './user_role.service';
 import { UserRoleController } from './user_role.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserRole, UserRoleSchema } from './entities/user_role.entity';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: UserRole.name, schema: UserRoleSchema }]),
     ConfigModule.forRoot(),
     ClientsModule.register([
       {
