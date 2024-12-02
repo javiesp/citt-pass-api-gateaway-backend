@@ -17,19 +17,25 @@ export class RoleController {
   @Post("/create-role")
   createRole(@Body() createRoleDto: CreateRoleDto) {
     console.log("crea un role")
-    return this.roleClient.send('createRole', createRoleDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+    return this.roleService.createRole(createRoleDto)  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-all-roles')
   findAllRoles() {
-    return this.roleClient.send('findAllRoles', {});
+    return this.roleService.findAllRoles()
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-one-role/:id')
   findOneRole(@Param('id') id: string) {
-    return this.roleClient.send("findOneRole", id);
+    return this.roleService.findOneRole(id)
+  }
+
+  @UseGuards(AuthGuard) 
+  @Get('/find-one-roleid')
+  findOneRoleId(@Query('role_id') role_id: string) {
+    return this.roleService.findOneRoleId(role_id)
   }
 
   @UseGuards(AuthGuard) 
@@ -39,12 +45,12 @@ export class RoleController {
       "id": id,
       "updateRoleDto": updateRoleDto
     }
-    return this.roleClient.send("updateRole", payload)
+    return this.roleService
   }
 
   @UseGuards(AuthGuard) 
   @Delete('/delete-role/:id')
   removeRole(@Param('id') id: string) {
-    return this.roleClient.send('removeRole', id)
+    return this.roleService
   }
 }
