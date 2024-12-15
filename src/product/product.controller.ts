@@ -18,19 +18,25 @@ export class ProductController {
   @Post("/create-product")
   createProduct(@Body() createProductDto: CreateProductDto) {
     console.log("crea un product")
-    return this.productClient.send('createProduct', createProductDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
+    return this.productService.createProduct(createProductDto);  // la funcion send() envia los datos al decorator @MessagePattern del micro servicio users, ademas del parametro
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-all-products')
   findAllProducts() {
-    return this.productClient.send('findAllProducts', {});
+    return this.productService.findAllProducts();
   }
 
   @UseGuards(AuthGuard) 
   @Get('/find-one-product/:id')
   findOneProduct(@Param('id') id: string) {
-    return this.productClient.send("findOneProduct", id);
+    return this.productService.findOneProduct(id);
+  }
+
+  @UseGuards(AuthGuard) 
+  @Get('/find-product-by-itemid')
+  findProducByItem(@Query('item_id') item_id: number) {
+    return this.productService.findProducByItem(item_id);
   }
 
   @UseGuards(AuthGuard) 
@@ -40,12 +46,12 @@ export class ProductController {
       "id": id,
       "updateProductDto": updateProductDto
     }
-    return this.productClient.send("updateProduct", payload)
+    return this.productService.updateProduct(id, updateProductDto);
   }
 
   @UseGuards(AuthGuard) 
   @Delete('/delete-product/:id')
   removeProduct(@Param('id') id: string) {
-    return this.productClient.send('removeProduct', id)
+    return this.productService.removeProduct(id);
   }
 }
