@@ -28,6 +28,12 @@ export class ItemController {
   }
 
   @UseGuards(AuthGuard) 
+  @Get('/find-items-by-inventory')
+  findItemByInvetory(@Query('inventory_id') inventory_id: number) {
+    return this.itemService.findItemByInvetory(inventory_id);
+  }
+
+  @UseGuards(AuthGuard) 
   @Get('/find-one-item/:id')
   findOneItem(@Param('id') id: string) {
     return this.itemService.findOneItem(id);
