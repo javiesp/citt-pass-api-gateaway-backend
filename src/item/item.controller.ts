@@ -27,11 +27,12 @@ export class ItemController {
     return this.itemService.findAllItems();
   }
 
-  @UseGuards(AuthGuard) 
-  @Get('/find-items-by-inventory')
-  findItemByInvetory(@Query('inventory_id') inventory_id: number) {
-    return this.itemService.findItemByInvetory(inventory_id);
-  }
+// En el controlador (item.controller.ts)
+@UseGuards(AuthGuard) 
+@Get('/find-items-by-inventory')
+findItemsByInventory(@Query('inventory_id') inventory_id: number) {
+  return this.itemService.findItemsByInventory(inventory_id);
+}
 
   @UseGuards(AuthGuard) 
   @Get('/find-one-item/:id')

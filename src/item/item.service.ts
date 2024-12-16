@@ -23,9 +23,10 @@ export class ItemService {
     return await this.itemModel.findById(id).exec();
   }
 
-  async findItemByInvetory(inventory_id: number): Promise<Item> {
-    return await this.itemModel.findOne({ 'inventory_id': inventory_id }).exec();
+  async findItemsByInventory(inventory_id: number): Promise<Item[]> {
+    return await this.itemModel.find({ 'inventory_id': inventory_id }).lean().exec();
   }
+
 
   async updateItem(id: string, updateItemDto: UpdateItemDto): Promise<Item> {
     return await this.itemModel.findByIdAndUpdate(id, updateItemDto, { new: true }).exec();
